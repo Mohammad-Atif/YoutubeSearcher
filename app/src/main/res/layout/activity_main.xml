@@ -15,12 +15,13 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/search_here_txt"
-        android:inputType="text"
+        android:inputType="textCapWords"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/btnSearch"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/btnSearch"
