@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">YoutubeSearcher</string>
+    <string name="search_here_txt">search here</string>
+    <string name="search_text">Search</string>
+</resources>
