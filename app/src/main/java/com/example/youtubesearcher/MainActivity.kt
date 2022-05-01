@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.AbsListView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     lateinit var searchResultAdapter: SearchResultAdapter
-    val DELAY:Long = 1500
+    val DELAY:Long = 1000
     lateinit var viewModel: YoutubeViewModel
     lateinit var manager:LinearLayoutManager
     private var isScroll = false
@@ -52,7 +51,6 @@ class MainActivity : AppCompatActivity() {
                     timer = Timer()
                     timer.schedule(object : TimerTask() {
                         override fun run() {
-                            Log.d("check","working")
                             if(p0.toString().isNotEmpty() and p0.toString().isNotBlank())
                             viewModel.getVideoList(p0.toString(),true)
                         }

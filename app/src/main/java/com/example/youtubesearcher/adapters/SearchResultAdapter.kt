@@ -50,6 +50,7 @@ class SearchResultAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return searchResults.size
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
     fun setData(newList: List<YoutubeDataModel>, rv: RecyclerView, isNewSearch:Boolean){
         if(!isNewSearch)
