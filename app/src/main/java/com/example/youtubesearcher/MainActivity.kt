@@ -5,22 +5,37 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import androidx.core.widget.addTextChangedListener
+import android.widget.AbsListView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
+import com.example.youtubesearcher.adapters.SearchResultAdapter
 import com.example.youtubesearcher.databinding.ActivityMainBinding
+import com.example.youtubesearcher.viewmodels.YoutubeViewModel
+
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    val DELAY:Long = 2000
+    lateinit var searchResultAdapter: SearchResultAdapter
+    val DELAY:Long = 1500
+    lateinit var viewModel: YoutubeViewModel
+    lateinit var manager:LinearLayoutManager
+    private var isScroll = false
+    private var currentItem = -1
+    private var totalItem = -1
+    private var scrollOutItem = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        initRecyclerView()
         // checking the auto event trigger in edittext
-
+        viewModel = ViewModelProvider(this).get(YoutubeViewModel::class.java)
         var timer = Timer()
 
         binding.txtSearch.addTextChangedListener (
@@ -38,10 +53,56 @@ class MainActivity : AppCompatActivity() {
                     timer.schedule(object : TimerTask() {
                         override fun run() {
                             Log.d("check","working")
+                            if(p0.toString().isNotEmpty() and p0.toString().isNotBlank())
+                            viewModel.getVideoList(p0.toString(),true)
                         }
                     }, DELAY)
                 }
             }
         )
+        binding.btnSearch.setOnClickListener {
+            if(binding.txtSearch.text.isNotBlank() and binding.txtSearch.text.isNotEmpty())
+                viewModel.getVideoList(binding.txtSearch.text.toString(),true)
+        }
+        viewModel.searchList.observe(this, androidx.lifecycle.Observer {
+            if (it != null) {
+                searchResultAdapter.setData(it.items,binding.searchRecyclerView,viewModel.isNewSearch)
+            }
+        })
+
+
+        binding.searchRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    isScroll = true
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                currentItem = manager.childCount
+                totalItem = manager.itemCount
+                scrollOutItem = manager.findFirstVisibleItemPosition()
+                if (isScroll && (currentItem + scrollOutItem == totalItem)){
+                    isScroll = false
+                    viewModel.getVideoList()
+
+                    }
+                }
+        })
+
+
+    }
+
+
+    private fun initRecyclerView()
+    {
+        binding.searchRecyclerView.apply {
+            manager = LinearLayoutManager(applicationContext)
+            layoutManager= manager
+            searchResultAdapter= SearchResultAdapter()
+            adapter= searchResultAdapter
+        }
     }
 }
