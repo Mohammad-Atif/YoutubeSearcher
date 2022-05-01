@@ -16,7 +16,10 @@ import com.example.youtubesearcher.databinding.ActivityMainBinding
 import com.example.youtubesearcher.viewmodels.YoutubeViewModel
 
 import java.util.*
-
+/*
+we can hit the youtube api only 100 times with the free quota,
+after that it will not work
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
